@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
     <link rel="stylesheet" href="/css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
 <body>
     <div class="modal-wrapper">
@@ -18,16 +19,33 @@
                 <label for="fio_register">ФИО
                     <input type="text" name="fio" id="fio_register" required></label>
                 <label for="password_register">Пароль
-                    <input type="password" name="password" id="password_register"></label>
+                    <input type="password" name="password" id="password_register" required></label>
                 <label for="password_repeat_register">Повторить пароль
-                    <input type="password" name="password_repeat" id="password_repeat_register"></label>
+                    <input type="password" name="password_repeat" id="password_repeat_register" required></label>
                 <label for="auth_remember">Я принимаю <a class="policy" href="/index.php?policy">политику конфиденциальности</a> 
-                    <input type="checkbox" name="remember" id="auth_remember"></label>
+                    <input type="checkbox" name="remember" id="auth_remember" required></label>
                 <input type="submit" class="submit" value="Войти">
             </form>
-            <a href="/index.php?auth">Войти</a>
+            <a href="/index.php?auth" id="auth_link">Войти</a>
         </div>
     </div>   
-    <script src="/js/script.js"></script>
+    <script>
+        $('#register_form').on('submit', (e) => {
+            e.preventDefault();
+            const data = $('#register_form').serialize();
+            if ($('#password_register').val() === $('#password_repeat_register').val()) {
+                $.ajax({
+                    url: '/handle/register_handle.php',
+                    data: data,
+                    type: 'POST',
+                    success: function(result) {
+                        if (result == 1) {
+                            document.location.href = "http://worktest/index.php";
+                        }
+                    }
+                })
+            }    
+        })
+    </script>
 </body>
 </html>
